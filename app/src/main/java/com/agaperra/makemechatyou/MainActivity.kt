@@ -3,13 +3,14 @@ package com.agaperra.makemechatyou
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.agaperra.makemechatyou.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Main activity
  *
  * @constructor Create empty Main activity with view binding
  */
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     /**
