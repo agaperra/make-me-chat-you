@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Make me chat you</string>
-    <string name="api_key">pj6mf5w4rcgg</string>
     <string name="confirm">Confirm</string>
     <string name="login">Login</string>
     <string name="your_name">Your name</string>
