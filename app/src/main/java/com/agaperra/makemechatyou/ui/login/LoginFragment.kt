@@ -79,7 +79,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                         Toast.makeText(
                             requireContext(),
                             event.error,
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     }
                     is LoginViewModel.LogInEvent.Success -> {

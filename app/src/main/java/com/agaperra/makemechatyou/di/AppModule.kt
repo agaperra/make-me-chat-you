@@ -34,4 +34,5 @@ object AppModule {
     @Provides
     fun provideChatClient(@ApplicationContext context: Context, offlinePluginFactory: StreamOfflinePluginFactory) =
         ChatClient.Builder(BuildConfig.api_key, context).withPlugin(offlinePluginFactory).build()
+
 }
