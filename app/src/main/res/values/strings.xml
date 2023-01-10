@@ -11,4 +11,6 @@
     <string name="choose_channel_name">Choose a channel name</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="success_log_in">successful log in</string>
+    <string name="log_out">You are logged out from chats</string>
 </resources>

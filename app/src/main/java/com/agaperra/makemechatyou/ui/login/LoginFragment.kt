@@ -8,11 +8,13 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.agaperra.makemechatyou.R
 import com.agaperra.makemechatyou.databinding.FragmentLoginBinding
 import com.agaperra.makemechatyou.ui.BindingFragment
 import com.agaperra.makemechatyou.ui.util.Constants
+import com.agaperra.makemechatyou.ui.util.navigateSafely
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -31,6 +33,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentLoginBinding::inflate
 
+    // the model will be recreated every time
     private val viewModel: LoginViewModel by viewModels()
 
     /**
@@ -83,9 +86,10 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                         setupIdleUiState()
                         Toast.makeText(
                             requireContext(),
-                            "successful log in",
+                            getString(R.string.success_log_in),
                             Toast.LENGTH_SHORT
                         ).show()
+                        findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
                     }
                 }
             }
