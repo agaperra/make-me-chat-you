@@ -2,6 +2,7 @@ package com.agaperra.makemechatyou.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.agaperra.makemechatyou.ui.util.Constants.MIN_USERNAME_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,12 +27,6 @@ class LoginViewModel @Inject constructor(
     // access from the fragment is open
     val loginEvent = _loginEvent.asSharedFlow()
 
-    companion object {
-        /**
-         * Minimum Username Length
-         */
-        const val MIN_USERNAME_LENGTH = 3
-    }
 
     /**
      * Is validate user name
