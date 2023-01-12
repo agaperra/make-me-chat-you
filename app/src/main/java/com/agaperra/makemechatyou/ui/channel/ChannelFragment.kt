@@ -1,5 +1,7 @@
 package com.agaperra.makemechatyou.ui.channel
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +46,8 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
     // the model will not be recreated
     private val viewModel: ChannelViewModel by activityViewModels()
 
+    private lateinit var sPrefs: SharedPreferences
+
 
     /**
      * On view created
@@ -53,7 +57,7 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         val user = viewModel.getUser()
         if (user == null) {
             findNavController().popBackStack()
@@ -90,6 +94,8 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
         binding.channelListHeaderView.setOnUserAvatarClickListener {
             viewModel.logout()
+            sPrefs.edit().remove("firstname").apply()
+            sPrefs.edit().remove("username").apply()
             findNavController().popBackStack()
             Toast.makeText(
                 requireContext(),
@@ -99,18 +105,20 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
         }
 
         binding.channelListHeaderView.setOnActionButtonClickListener() {
-            findNavController().navigateSafely(
-                R.id.action_channelFragment_to_createChannelDialog
-            )
+            Toast.makeText(
+                requireContext(),
+                "Sorry, this function is not available yet.",
+                Toast.LENGTH_LONG
+            ).show()
+            // TODO create dialog
+//            findNavController().navigateSafely(
+//                R.id.action_channelFragment_to_createChannelDialog
+//            )
         }
 
         binding.channelListView.setChannelItemClickListener { channel ->
             val action = ChannelFragmentDirections.actionChannelFragmentToChatFragment(channel.cid)
             findNavController().navigate(action)
-//            findNavController().navigateSafely(
-//                R.id.action_channelFragment_to_chatFragment,
-//                Bundle().apply { putString("channdelId", channel.id) }
-//            )
         }
 
         lifecycleScope.launchWhenStarted {

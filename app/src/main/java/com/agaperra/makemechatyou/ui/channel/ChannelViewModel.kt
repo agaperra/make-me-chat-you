@@ -25,6 +25,7 @@ class ChannelViewModel @Inject constructor(
     private val _createChannelEvent = MutableSharedFlow<CreateChannelEvent>()
     val createChannelEvent = _createChannelEvent.asSharedFlow()
 
+    // TODO create dialog
     fun createChannel(channelName: String) {
         val trimmedChannelName = channelName.trim()
         viewModelScope.launch {

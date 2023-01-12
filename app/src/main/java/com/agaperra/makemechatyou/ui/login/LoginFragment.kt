@@ -1,5 +1,7 @@
 package com.agaperra.makemechatyou.ui.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +38,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     // the model will be recreated every time
     private val viewModel: LoginViewModel by viewModels()
 
+    private lateinit var sPrefs: SharedPreferences
+
     /**
      * On view created
      *
@@ -44,12 +48,25 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
+
+        if(sPrefs.getString("firstname", null) != null && sPrefs.getString("username", null) != null){
+            viewModel.connectUser(
+                sPrefs.getString("firstname", "") ?: "",
+                sPrefs.getString("username", "") ?: ""
+            )
+        }
         binding.btnConfirm.setOnClickListener {
             setupConnectingUiState()
+            if(sPrefs.getString("firstname", null) == null && sPrefs.getString("username", null) == null){
+                sPrefs.edit().putString("firstname", binding.etFirstName.text.toString()).apply()
+                sPrefs.edit().putString("username", binding.etUsername.text.toString()).apply()
+            }
             viewModel.connectUser(
-                binding.etFirstName.text.toString(),
-                binding.etUsername.text.toString()
+                sPrefs.getString("firstname", binding.etFirstName.text.toString()) ?: binding.etFirstName.text.toString(),
+                sPrefs.getString("username", binding.etUsername.text.toString()) ?: binding.etUsername.text.toString()
             )
+
         }
 
         with(binding.etUsername) {

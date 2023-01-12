@@ -51,7 +51,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (isValidateName(trimmedUsername) && isValidateName(trimmedFirstname)) {
                 if (client.getCurrentUser() == null) {
-                    val user = if (trimmedFirstname.contains("Varvara")&& trimmedFirstname.contains("Varvara")) {
+                    val user = if (trimmedFirstname.contains("Varvara")&& trimmedUsername.contains("agaperra")) {
                         User(
                             id = trimmedUsername,
                             extraData = mutableMapOf(

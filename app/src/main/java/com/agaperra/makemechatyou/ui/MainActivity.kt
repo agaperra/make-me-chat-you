@@ -1,4 +1,4 @@
-package com.agaperra.makemechatyou
+package com.agaperra.makemechatyou.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
