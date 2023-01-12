@@ -1,7 +1,6 @@
 package com.agaperra.makemechatyou.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
@@ -40,10 +39,12 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val id = findNavController(R.id.navHostFragment).currentDestination?.label
         if (id?.contains("ChatFragment") == true || id?.contains("LoginFragment") == true) {
-            super.onBackPressed()
-        } else if (id?.contains("ChannelFragment") == true) {
+            onBackPressedDispatcher.onBackPressed()
+        }
+        else if (id?.contains("ChannelFragment") == true) {
             val name = supportFragmentManager.getBackStackEntryAt(0).name
             supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.finish()
         }
     }
 }

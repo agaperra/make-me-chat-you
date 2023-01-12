@@ -8,9 +8,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.notifications.handler.NotificationConfig
 import io.getstream.chat.android.offline.model.message.attachments.UploadAttachmentsNetworkType
 import io.getstream.chat.android.offline.plugin.configuration.Config
 import io.getstream.chat.android.offline.plugin.factory.StreamOfflinePluginFactory
+import io.getstream.chat.android.pushprovider.firebase.FirebasePushDeviceGenerator
 import javax.inject.Singleton
 
 @Module
@@ -19,7 +21,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideOfflinePluginFactory(@ApplicationContext applicationContext: Context) = StreamOfflinePluginFactory(
+    fun provideOfflinePluginFactory(@ApplicationContext applicationContext: Context) =
+        StreamOfflinePluginFactory(
             config = Config(
                 backgroundSyncEnabled = true,
                 userPresence = true,
@@ -32,7 +35,18 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideChatClient(@ApplicationContext context: Context, offlinePluginFactory: StreamOfflinePluginFactory) =
-        ChatClient.Builder(BuildConfig.api_key, context).withPlugin(offlinePluginFactory).build()
+    fun provideNotificationConfig() = NotificationConfig(
+        pushDeviceGenerators = listOf(FirebasePushDeviceGenerator())
+    )
+
+    @Singleton
+    @Provides
+    fun provideChatClient(
+        @ApplicationContext context: Context,
+        offlinePluginFactory: StreamOfflinePluginFactory,
+        notificationConfig: NotificationConfig
+    ) =
+        ChatClient.Builder(BuildConfig.api_key, context).notifications(notificationConfig)
+            .withPlugin(offlinePluginFactory).build()
 
 }

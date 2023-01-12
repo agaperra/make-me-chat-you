@@ -3,6 +3,7 @@ package com.agaperra.makemechatyou.ui.login
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -16,7 +17,6 @@ import com.agaperra.makemechatyou.R
 import com.agaperra.makemechatyou.databinding.FragmentLoginBinding
 import com.agaperra.makemechatyou.ui.BindingFragment
 import com.agaperra.makemechatyou.ui.util.Constants
-import com.agaperra.makemechatyou.ui.util.navigateSafely
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -50,7 +50,30 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         super.onViewCreated(view, savedInstanceState)
         sPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
 
-        if(sPrefs.getString("firstname", null) != null && sPrefs.getString("username", null) != null){
+        binding.btnConfirm.setOnClickListener {
+            setupConnectingUiState()
+            if (sPrefs.getString("firstname", null) == null && sPrefs.getString(
+                    "username",
+                    null
+                ) == null
+            ) {
+                sPrefs.edit().putString("firstname", binding.etFirstName.text.toString()).apply()
+                sPrefs.edit().putString("username", binding.etUsername.text.toString()).apply()
+            }
+            viewModel.connectUser(
+                sPrefs.getString("firstname", binding.etFirstName.text.toString())
+                    ?: binding.etFirstName.text.toString(),
+                sPrefs.getString("username", binding.etUsername.text.toString())
+                    ?: binding.etUsername.text.toString()
+            )
+
+        }
+
+        if (sPrefs.getString("firstname", null) != null && sPrefs.getString(
+                "username",
+                null
+            ) != null
+        ) {
             setupConnectingUiState()
             Toast.makeText(
                 requireContext(),
@@ -61,18 +84,6 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                 sPrefs.getString("firstname", "") ?: "",
                 sPrefs.getString("username", "") ?: ""
             )
-        }
-        binding.btnConfirm.setOnClickListener {
-            setupConnectingUiState()
-            if(sPrefs.getString("firstname", null) == null && sPrefs.getString("username", null) == null){
-                sPrefs.edit().putString("firstname", binding.etFirstName.text.toString()).apply()
-                sPrefs.edit().putString("username", binding.etUsername.text.toString()).apply()
-            }
-            viewModel.connectUser(
-                sPrefs.getString("firstname", binding.etFirstName.text.toString()) ?: binding.etFirstName.text.toString(),
-                sPrefs.getString("username", binding.etUsername.text.toString()) ?: binding.etUsername.text.toString()
-            )
-
         }
 
         with(binding.etUsername) {
@@ -115,9 +126,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                             getString(R.string.success_log_in),
                             Toast.LENGTH_SHORT
                         ).show()
-                        findNavController().navigateSafely(
-                            R.id.action_loginFragment_to_channelFragment
-                        )
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToChannelFragment())
                     }
                 }
             }

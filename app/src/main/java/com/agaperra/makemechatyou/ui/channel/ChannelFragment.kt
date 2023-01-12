@@ -10,16 +10,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.viewbinding.ViewBinding
 import com.agaperra.makemechatyou.R
 import com.agaperra.makemechatyou.databinding.FragmentChannelBinding
 import com.agaperra.makemechatyou.ui.BindingFragment
-import com.agaperra.makemechatyou.ui.util.navigateSafely
 import dagger.hilt.android.AndroidEntryPoint
-import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Filters
-import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.ChannelListHeaderViewModel
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModel

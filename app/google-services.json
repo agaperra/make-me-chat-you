@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "574019822831",
+    "project_id": "make-me-chat-you",
+    "storage_bucket": "make-me-chat-you.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574019822831:android:271fe91eea6f45380ee71a",
+        "android_client_info": {
+          "package_name": "com.agaperra.makemechatyou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574019822831-dael9e68rif6s9dfhcl6bv32rr8nj049.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCPnhwQCnW_U9xv0C3q3fiP2ZiiH0q5Ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574019822831-dael9e68rif6s9dfhcl6bv32rr8nj049.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
