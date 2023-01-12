@@ -51,6 +51,12 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         sPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
 
         if(sPrefs.getString("firstname", null) != null && sPrefs.getString("username", null) != null){
+            setupConnectingUiState()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.wait),
+                Toast.LENGTH_SHORT
+            ).show()
             viewModel.connectUser(
                 sPrefs.getString("firstname", "") ?: "",
                 sPrefs.getString("username", "") ?: ""
