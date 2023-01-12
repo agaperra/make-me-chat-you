@@ -15,4 +15,5 @@
     <string name="success_log_in">successful log in</string>
     <string name="log_out">You are logged out from chats</string>
     <string name="connect_ok">Success Connecting the User</string>
+    <string name="wait">Please wait, login is in progress</string>
 </resources>

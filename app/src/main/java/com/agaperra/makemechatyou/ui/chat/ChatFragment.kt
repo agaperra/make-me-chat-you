@@ -66,7 +66,7 @@ class ChatFragment : BindingFragment<FragmentChatBinding>() {
 
         messageListViewModel.state.observe(viewLifecycleOwner){ state ->
             if(state is MessageListViewModel.State.NavigateUp){
-                findNavController().navigateUp()
+                findNavController().popBackStack()
             }
         }
 
