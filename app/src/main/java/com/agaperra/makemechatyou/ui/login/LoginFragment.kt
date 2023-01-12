@@ -17,6 +17,7 @@ import com.agaperra.makemechatyou.R
 import com.agaperra.makemechatyou.databinding.FragmentLoginBinding
 import com.agaperra.makemechatyou.ui.BindingFragment
 import com.agaperra.makemechatyou.ui.util.Constants
+import com.agaperra.makemechatyou.ui.util.navigateSafely
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -126,7 +127,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                             getString(R.string.success_log_in),
                             Toast.LENGTH_SHORT
                         ).show()
-                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToChannelFragment())
+                        findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
                     }
                 }
             }

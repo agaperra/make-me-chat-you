@@ -36,7 +36,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideNotificationConfig() = NotificationConfig(
-        pushDeviceGenerators = listOf(FirebasePushDeviceGenerator())
+        pushDeviceGenerators = listOf(FirebasePushDeviceGenerator()),
+        pushNotificationsEnabled = true,
+        shouldShowNotificationOnPush = { true },
+        requestPermissionOnAppLaunch = { false }
     )
 
     @Singleton
