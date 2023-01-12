@@ -8,13 +8,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewbinding.ViewBinding
 import com.agaperra.makemechatyou.R
 import com.agaperra.makemechatyou.databinding.FragmentChannelBinding
 import com.agaperra.makemechatyou.ui.BindingFragment
 import com.agaperra.makemechatyou.ui.util.navigateSafely
 import dagger.hilt.android.AndroidEntryPoint
+import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Filters
+import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.ChannelListHeaderViewModel
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModel
@@ -29,6 +32,7 @@ import io.getstream.chat.android.ui.channel.list.viewmodel.factory.ChannelListVi
 @AndroidEntryPoint
 class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
+
     /**
      * Binding inflater
      *
@@ -39,6 +43,7 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
     // the model will not be recreated
     private val viewModel: ChannelViewModel by activityViewModels()
+
 
     /**
      * On view created
@@ -55,11 +60,22 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
             return
         }
 
+        setupChannels()
+
+    }
+
+
+    /**
+     * Setup channels
+     *
+     */
+    private fun setupChannels(){
         val factory = ChannelListViewModelFactory(
             filter = Filters.and(
                 Filters.eq(
                     "type", "messaging"
-                )
+                ),
+                Filters.`in`("members", listOf(viewModel.getUser()!!.id))
             ),
             sort = ChannelListViewModel.DEFAULT_SORT,
             limit = 30
@@ -89,10 +105,12 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
         }
 
         binding.channelListView.setChannelItemClickListener { channel ->
-            findNavController().navigateSafely(
-                R.id.action_channelFragment_to_chatFragment,
-                Bundle().apply { putString("channdelId", channel.cid) }
-            )
+            val action = ChannelFragmentDirections.actionChannelFragmentToChatFragment(channel.cid)
+            findNavController().navigate(action)
+//            findNavController().navigateSafely(
+//                R.id.action_channelFragment_to_chatFragment,
+//                Bundle().apply { putString("channdelId", channel.id) }
+//            )
         }
 
         lifecycleScope.launchWhenStarted {
@@ -116,4 +134,5 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
             }
         }
     }
+
 }

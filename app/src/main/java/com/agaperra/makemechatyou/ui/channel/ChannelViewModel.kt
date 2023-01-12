@@ -34,8 +34,9 @@ class ChannelViewModel @Inject constructor(
             }
             val result = client.channel(
                 channelType = "messaging",
-                channelId = UUID.randomUUID().toString()
-            ).create(
+                channelId = "general"
+            )
+                .create(
                 extraData = mapOf(
                     "name" to trimmedChannelName,
                 ), memberIds = emptyList()

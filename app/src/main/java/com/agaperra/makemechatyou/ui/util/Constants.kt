@@ -4,5 +4,5 @@ object Constants {
     /**
      * Minimum Username Length
      */
-    const val MIN_USERNAME_LENGTH = 3
+    const val MIN_NAME_LENGTH = 3
 }
