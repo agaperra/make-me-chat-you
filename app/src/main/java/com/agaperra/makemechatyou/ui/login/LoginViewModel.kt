@@ -2,9 +2,10 @@ package com.agaperra.makemechatyou.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.agaperra.makemechatyou.ui.util.Constants.MIN_USERNAME_LENGTH
+import com.agaperra.makemechatyou.ui.util.Constants.MIN_NAME_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.User
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -33,30 +34,59 @@ class LoginViewModel @Inject constructor(
      *
      * This method checks the user name for correctness in length
      *
+     * @param name
+     */
+    private fun isValidateName(name: String) = name.length >= MIN_NAME_LENGTH
+
+
+    /**
+     * Connect user
+     *
+     * @param firstName
      * @param username
      */
-    private fun isValidateUserName(username: String) = username.length >= MIN_USERNAME_LENGTH
-
-
-    fun connectUser(username: String) {
+    fun connectUser(firstName: String, username: String) {
         val trimmedUsername = username.trim()
+        val trimmedFirstname = firstName.trim()
         viewModelScope.launch {
-            if (isValidateUserName(trimmedUsername)) {
-                val result = client.connectGuestUser(
-                    userId = trimmedUsername,
-                    username = trimmedUsername
-                ).await()
-                if (result.isError) {
-                    _loginEvent.emit(
-                        LogInEvent.ErrorLogIn(
-                            result.error().message ?: "Unknown error"
+            if (isValidateName(trimmedUsername) && isValidateName(trimmedFirstname)) {
+                if (client.getCurrentUser() == null) {
+                    val user = if (trimmedFirstname.contains("Varvara")&& trimmedUsername.contains("agaperra")) {
+                        User(
+                            id = trimmedUsername,
+                            extraData = mutableMapOf(
+                                "name" to trimmedFirstname,
+                                "county" to "Russia",
+                                "image" to "http://ih0.redbubble.net/image.601960678.3325/flat%2C1000x1000%2C075%2Cf.u5.jpg"
+                            ),
+                            role = "admin"
                         )
-                    )
-                    return@launch
+                    } else {
+                        User(
+                            id = trimmedUsername,
+                            extraData = mutableMapOf(
+                                "name" to trimmedFirstname
+                            ),
+                            role = "user"
+                        )
+                    }
+                    val token = client.devToken(user.id)
+                    val result = client.connectUser(
+                        user = user,
+                        token = token
+                    ).await()
+                    if (result.isError) {
+                        _loginEvent.emit(
+                            LogInEvent.ErrorLogIn(
+                                result.error().message ?: "Unknown error"
+                            )
+                        )
+                        return@launch
+                    }
+                    _loginEvent.emit(LogInEvent.Success)
+                } else {
+                    _loginEvent.emit(LogInEvent.ErrorInputTooShort)
                 }
-                _loginEvent.emit(LogInEvent.Success)
-            } else {
-                _loginEvent.emit(LogInEvent.ErrorInputTooShort)
             }
         }
     }

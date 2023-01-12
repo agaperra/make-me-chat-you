@@ -1,5 +1,7 @@
 package com.agaperra.makemechatyou.ui.channel
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +10,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewbinding.ViewBinding
 import com.agaperra.makemechatyou.R
 import com.agaperra.makemechatyou.databinding.FragmentChannelBinding
 import com.agaperra.makemechatyou.ui.BindingFragment
 import com.agaperra.makemechatyou.ui.util.navigateSafely
 import dagger.hilt.android.AndroidEntryPoint
+import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Filters
+import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.ChannelListHeaderViewModel
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModel
@@ -29,6 +34,7 @@ import io.getstream.chat.android.ui.channel.list.viewmodel.factory.ChannelListVi
 @AndroidEntryPoint
 class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
+
     /**
      * Binding inflater
      *
@@ -40,6 +46,9 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
     // the model will not be recreated
     private val viewModel: ChannelViewModel by activityViewModels()
 
+    private lateinit var sPrefs: SharedPreferences
+
+
     /**
      * On view created
      *
@@ -48,18 +57,29 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sPrefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         val user = viewModel.getUser()
         if (user == null) {
             findNavController().popBackStack()
             return
         }
 
+        setupChannels()
+
+    }
+
+
+    /**
+     * Setup channels
+     *
+     */
+    private fun setupChannels(){
         val factory = ChannelListViewModelFactory(
             filter = Filters.and(
                 Filters.eq(
                     "type", "messaging"
-                )
+                ),
+                Filters.`in`("members", listOf(viewModel.getUser()!!.id))
             ),
             sort = ChannelListViewModel.DEFAULT_SORT,
             limit = 30
@@ -74,6 +94,8 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
         binding.channelListHeaderView.setOnUserAvatarClickListener {
             viewModel.logout()
+            sPrefs.edit().remove("firstname").apply()
+            sPrefs.edit().remove("username").apply()
             findNavController().popBackStack()
             Toast.makeText(
                 requireContext(),
@@ -83,16 +105,20 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
         }
 
         binding.channelListHeaderView.setOnActionButtonClickListener() {
-            findNavController().navigateSafely(
-                R.id.action_channelFragment_to_createChannelDialog
-            )
+            Toast.makeText(
+                requireContext(),
+                "Sorry, this function is not available yet.",
+                Toast.LENGTH_LONG
+            ).show()
+            // TODO create dialog
+//            findNavController().navigateSafely(
+//                R.id.action_channelFragment_to_createChannelDialog
+//            )
         }
 
         binding.channelListView.setChannelItemClickListener { channel ->
-            findNavController().navigateSafely(
-                R.id.action_channelFragment_to_chatFragment,
-                Bundle().apply { putString("channdelId", channel.cid) }
-            )
+            val action = ChannelFragmentDirections.actionChannelFragmentToChatFragment(channel.cid)
+            findNavController().navigate(action)
         }
 
         lifecycleScope.launchWhenStarted {
@@ -116,4 +142,5 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
             }
         }
     }
+
 }
